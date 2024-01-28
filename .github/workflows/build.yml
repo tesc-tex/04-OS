@@ -1,0 +1,69 @@
+name: Build and deploy
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+# env:
+#   SEMESTER: "00"
+#   SUBJECT: "example"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build PDF
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
+          latexmk_shell_escape: true
+
+      - name: Upload pages artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ env.SEMESTER}}_${{ env.SUBJECT }}.pdf
+          path: main.pdf
+          if-no-files-found: error
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.SEMESTER}}_${{ env.SUBJECT }}.pdf
+          path: .
+
+      - uses: actions/checkout@v3
+        with:
+          repository: isagila/tesc
+          ref: gh-pages
+          path: tesc
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Move PDF
+        run: |
+          mkdir -p tesc/${{ env.SEMESTER }}
+          mv main.pdf tesc/${{ env.SEMESTER }}/${{ env.SUBJECT }}.pdf
+      
+      - name: Commit and push changes
+        run: |
+          cd tesc
+          git config --global user.name isagila
+          git config --global user.email "isagila@mail.ru"
+          git add "${{ env.SEMESTER }}/${{ env.SUBJECT }}.pdf"
+          git commit -m "Update ${{ env.SEMESTER }}/${{ env.SUBJECT }}.pdf"
+          git push
