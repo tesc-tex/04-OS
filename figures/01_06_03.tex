@@ -1,0 +1,19 @@
+\begin{tikzpicture}[
+  every node/.style = { draw, ellipse },
+  arr/.style = { arrows = {-Latex[length = 5pt, width = 5pt]} }
+]
+  \draw (0, 2) node (B) {Рождение};
+  \draw (0, 0) node (P) {Готов};
+  \draw (3, -2) node (E) {Выполняется};
+  \draw (-3, -2) node (W) {Ожидает};
+  \draw (3, -4) node (T) {Завершение};
+
+  \path[arr] (0, 4) edge (B);
+  \path[arr] (B) edge (P);
+  \path[arr] (P) edge[bend right = 35] (E);
+  \path[arr] (E) edge[bend right = 35] (P);
+  \path[arr] (E) edge[bend left = 30] (W);
+  \path[arr] (W) edge[bend left = 30] (P);
+  \path[arr] (E) edge (T);
+  \path[arr] (T) edge +(0, -2);
+\end{tikzpicture}

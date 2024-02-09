@@ -1,0 +1,31 @@
+\begin{tikzpicture}[
+  every node/.style = { draw, ellipse },
+  arr/.style = { arrows = {-Latex[length = 5pt, width = 5pt]} }
+]
+  \draw (0, 2) node (B) {Рождение};
+  \draw (0, 0) node (P) {Готов};
+  \draw (3, -2) node (E) {Выполняется};
+  \draw (4, -0.5) node (S) {Остановлен};
+  \draw (7.5, -2) node[align = center] (EXC) {Исключительная \\ ситуация};
+  \draw (-1.5, -2) node[align = center] (W1) {Ожидает \\ (непрерывно)};
+  \draw (-4.5, -3.5) node[align = center] (W2) {Ожидает \\ (прерываемо)};
+  \draw (3, -4) node (T) {Завершение};
+  \draw (7.5, -4) node (Z) {Зомби};
+
+  \path[arr] (0, 4) edge (B);
+  \path[arr] (B) edge (P);
+  \path[arr] (P) edge[bend right = 35] (E);
+  \path[arr] (E) edge[bend right = 15] (P);
+  \path[arr] (E) edge[bend left = 20] (W1);
+  \path[arr] (W1) edge[bend left = 10] (P);
+  \path[arr] (E) edge[bend left = 30] (W2);
+  \path[arr] (W2) edge[bend left = 30] (P);
+  \path[arr] (E) edge[bend right = 10] (S);
+  \path[arr] (S) edge[bend right = 10] (P);
+  \path[arr] (E) edge (EXC);
+  \path[arr] (EXC) edge[bend left = 25] (T);
+  \path[arr] (EXC) edge[bend right = 35] (P);
+  \path[arr] (E) edge (T);
+  \path[arr] (T) edge[bend right = 20] (Z);
+  \path[arr] (T) edge +(0, -2);
+\end{tikzpicture}

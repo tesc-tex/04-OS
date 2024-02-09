@@ -1,0 +1,15 @@
+\begin{tikzpicture}[
+  lab/.style = { draw, ellipse },
+  arr/.style = { arrows = {-Latex[length = 5pt, width = 5pt]} }
+]
+  \draw (0, 0) node[lab] (P) {Готов};
+  \draw (3, -2) node[lab] (E) {Выполняется};
+  \draw (-3, -2) node[lab] (W) {Ожидает};
+
+  \path[arr] (0, 2) edge node[left, midway] {Запуск} (P);
+  \path[arr] (P) edge[bend right = 35] (E);
+  \path[arr] (E) edge[bend right = 35] (P);
+  \path[arr] (E) edge[bend left = 30] (W);
+  \path[arr] (W) edge[bend left = 30] (P);
+  \path[arr] (E) edge node[right, midway] {Завершение работы} +(0, -2);
+\end{tikzpicture}
